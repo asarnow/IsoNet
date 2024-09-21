@@ -1,15 +1,15 @@
 import os 
 import sys
 import logging
-import sys
 import mrcfile
+import numpy as np
 from IsoNet.preprocessing.cubes import create_cube_seeds,crop_cubes,DataCubes
 from IsoNet.preprocessing.img_processing import normalize
 from IsoNet.preprocessing.simulate import apply_wedge1 as  apply_wedge, mw2d
 from IsoNet.preprocessing.simulate import apply_wedge_dcube
 from multiprocessing import Pool
-import numpy as np
 from functools import partial
+from pathlib import Path
 from IsoNet.util.rotations import rotation_list
 # from difflib import get_close_matches
 from IsoNet.util.metadata import MetaData, Item, Label
@@ -117,7 +117,8 @@ def get_cubes(inp,settings):
     rotate by rotation_list and feed to get_cubes_one
     '''
     mrc, start = inp
-    root_name = mrc.split('/')[-1].split('.')[0]
+    #root_name = "".join(mrc.split('/')[-1].split('.')[:-1])
+    root_name = Path(mrc).stem
     current_mrc = '{}/{}_iter{:0>2d}.mrc'.format(settings.result_dir,root_name,settings.iter_count-1)
     with mrcfile.open(mrc, permissive=True) as mrcData:
         iw_data = mrcData.data.astype(np.float32)*-1
@@ -210,14 +211,16 @@ def generate_first_iter_mrc(mrc,settings):
     '''
     Apply mw to the mrc and save as xx_iter00.xx
     '''
-    root_name = mrc.split('/')[-1].split('.')[0]
-    extension = mrc.split('/')[-1].split('.')[1]
+    #root_name = mrc.split('/')[-1].split('.')[0]
+    #extension = mrc.split('/')[-1].split('.')[-1]
+    root_name = Path(mrc).stem
+    extension = Path(mrc).suffix
     with mrcfile.open(mrc, permissive=True) as mrcData:
         orig_data = normalize(mrcData.data.astype(np.float32)*-1, percentile = settings.normalize_percentile)
     orig_data = apply_wedge(orig_data, ld1=1, ld2=0)
     orig_data = normalize(orig_data, percentile = settings.normalize_percentile)
 
-    with mrcfile.new('{}/{}_iter00.{}'.format(settings.result_dir,root_name, extension), overwrite=True) as output_mrc:
+    with mrcfile.new('{}/{}_iter00{}'.format(settings.result_dir,root_name, extension), overwrite=True) as output_mrc:
         output_mrc.set_data(-orig_data)
 
     #preparation files for the first iteration
