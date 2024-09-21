@@ -2,6 +2,9 @@ import numpy as np
 import cupy as cp
 from multiprocessing import Pool
 from functools import partial
+from pathlib import Path
+
+
 def tom_ctf1d(pixelsize, voltage, cs, defocus, amplitude, phaseshift, bfactor, length=2048):
 
     ny = 1 / pixelsize
@@ -191,7 +194,7 @@ if __name__ == '__main__':
     #     result = tom_deconv_tomo(i, angpix=pixsize, defocus=defocus, snrfalloff=snrfalloff, deconvstrength=deconvstrength, highpassnyquist=0.1, phaseflipped=False, phaseshift=0 )
     #     chunks_deconv_list.append(result)
     vol_restored = c.restore(chunks_deconv_list)
-    outname = outFile.split('.')[0] +'-snr{}-strnth{}.rec'.format(str(snrfalloff),str(deconvstrength))
+    outname = Path(outFile).stem +'-snr{}-strnth{}.rec'.format(str(snrfalloff),str(deconvstrength))
     print("out_name: ",outname)
     # result = tom_deconv_tomo(vol, angpix=pixsize, defocus=defocus, snrfalloff=snrfalloff, deconvstrength=deconvstrength, highpassnyquist=0.1, phaseflipped=False, phaseshift=0 )
     with mrcfile.new(outname, overwrite=True) as mrc:

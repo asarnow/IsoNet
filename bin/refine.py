@@ -7,6 +7,7 @@ import sys
 import shutil
 from IsoNet.util.metadata import MetaData
 from IsoNet.util.utils import mkfolder
+from pathlib import Path
 
 def run(args):
     if args.log_level == "debug":
@@ -119,7 +120,7 @@ def run(args):
             if args.remove_intermediate is True:
                 logging.info("Remove intermediate files in iteration {}".format(args.iter_count-1))
                 for mrc in args.mrc_list:
-                    root_name = mrc.split('/')[-1].split('.')[0]
+                    root_name = Path(mrc).stem
                     current_mrc = '{}/{}_iter{:0>2d}.mrc'.format(args.result_dir,root_name,args.iter_count-1)
                     os.remove(current_mrc)
 

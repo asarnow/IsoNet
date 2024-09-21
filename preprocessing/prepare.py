@@ -117,7 +117,6 @@ def get_cubes(inp,settings):
     rotate by rotation_list and feed to get_cubes_one
     '''
     mrc, start = inp
-    #root_name = "".join(mrc.split('/')[-1].split('.')[:-1])
     root_name = Path(mrc).stem
     current_mrc = '{}/{}_iter{:0>2d}.mrc'.format(settings.result_dir,root_name,settings.iter_count-1)
     with mrcfile.open(mrc, permissive=True) as mrcData:
@@ -211,8 +210,6 @@ def generate_first_iter_mrc(mrc,settings):
     '''
     Apply mw to the mrc and save as xx_iter00.xx
     '''
-    #root_name = mrc.split('/')[-1].split('.')[0]
-    #extension = mrc.split('/')[-1].split('.')[-1]
     root_name = Path(mrc).stem
     extension = Path(mrc).suffix
     with mrcfile.open(mrc, permissive=True) as mrcData:

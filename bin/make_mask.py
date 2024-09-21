@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 import sys
 import mrcfile
 args = sys.argv
@@ -7,6 +6,8 @@ from IsoNet.util.filter import maxmask,stdmask
 import numpy as np
 #import cupy as cp
 import os
+from pathlib import Path
+
 
 def make_mask_dir(tomo_dir,mask_dir,side = 8, density_percentage=30,std_percentage=1,surface=None):
     tomo_list = ["{}/{}".format(tomo_dir,f) for f in os.listdir(tomo_dir)]
@@ -16,7 +17,7 @@ def make_mask_dir(tomo_dir,mask_dir,side = 8, density_percentage=30,std_percenta
         import shutil
         shutil.rmtree(mask_dir)
         os.makedirs(mask_dir)
-    mask_list = ["{}/{}_mask.mrc".format(mask_dir,f.split('.')[0]) for f in os.listdir(tomo_dir)]
+    mask_list = ["{}/{}_mask.mrc".format(mask_dir, Path(f).stem) for f in os.listdir(tomo_dir)]
 
     for i,tomo in enumerate(tomo_list):
         print('tomo and mask',tomo, mask_list[i])

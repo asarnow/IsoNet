@@ -28,7 +28,6 @@ def predict(settings):
         append_number = N - num_batches%N
     data = []
     for i,mrc in enumerate(list(settings.mrc_list) + list(settings.mrc_list[:append_number])):
-        #root_name = mrc.split('/')[-1].split('.')[0]
         root_name = Path(mrc).stem
         with mrcfile.open(mrc, permissive=True) as mrcData:
             real_data = mrcData.data.astype(np.float32)*-1
@@ -51,7 +50,6 @@ def predict(settings):
                 count = i + j - N + 1
                 if count < len(settings.mrc_list):
                     m_name = settings.mrc_list[count]
-                    #root_name = m_name.split('/')[-1].split('.')[0]
                     root_name = Path(m_name).stem
                     end_size = pad_size1+cube_size
                     outData1 = outData[pad_size1:end_size, pad_size1:end_size, pad_size1:end_size]
@@ -72,7 +70,6 @@ def predict_one(args,one_tomo,output_file=None):
         model = tf.keras.models.load_model(args.model)
 
     logging.info("Loaded model from disk")
-    #root_name = one_tomo.split('/')[-1].split('.')[0]
     root_name = Path(one_tomo).stem
 
     if output_file is None:
